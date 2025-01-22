@@ -5,10 +5,8 @@
 
 ## setup
 - create a virtual env and activate it
-- install [OpenFHEPy](https://github.com/LinusHenke99/OpenFHEPy) into the virtual environment
+- install [OpenFHEPy](https://anonymous.4open.science/r/OpenFHEPy-1234) into the virtual environment
 - install project dependencies: `pip install .
-
-or use the [docker image](https://hub.docker.com/r/linushenke/he-man-openfhe)
 
 ## usage
 run this command for an interactive help
