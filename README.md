@@ -3,6 +3,23 @@
 
 ![Version](https://img.shields.io/badge/Version-0.1-blue)
 
+## TWA
+![TWA](img/twa.png)
+
+## TWA Implementation
+![TWA Class Diagram](img/twa-classes.png)
+
+All operators inherit from an `Operator` class, where the `forward` method corresponds to applying the operation on a ciphertext. This `Operator` class has a private static member in the form of a context object, giving the connection to the CKKS environment. The lower layer of abstraction then implements the linear operators, activation functions, and batch normalization.
+### Activation Function
+The activation functions are implemented in the `ActivationFunction` class. OpenFHE provides a method for evaluating polynomials, where the parameters are fitted using Chebyshev approximation. This is done by providing an interval for the approximation and the polynomial degree $l$. The polynomial degree and the interval are both set by the model interaction. The interval of each activation function is deducted from a tuning process, where a set of inputs representing the real dataset is passed through the model giving a statistical overview of the values when an input is passed for activation function evaluation. An activation function object only stores these parameters and leaves the interval calculation to the model interaction.
+### Linear Operators
+Linear operators are derived from the `GeneralLinearOperator` class, which utilizes matrix multiplication to implement the `forward` method. The model interaction provides methods to derive the bias and transformation matrix out of a linear ONNX layer, which means that the linear operations in our implementation only need to take care of the multiplication and adding the bias. The model interaction packs the $m$-fold tensors by flattening them with row major order and in turn generates the transformation matrix accordingly.
+
+It is worth mentioning that the `GeneralLinearOperator` class is not abstract, meaning that it can be instantiated and used. We still decided to implement another layer for each explicit operator. This was done for code readability and debugging since every object has a unique private identifier that contains class information.
+### Matrix Multiplication
+At the time of writing, OpenFHE does not include an implementation of matrix multiplication.
+Therefore, we implemented the multiplication between a plaintext matrix $A$ and a ciphertext vector $\tilde{x}$ by using the babystep-giantstep method
+
 ## setup
 - create a virtual env and activate it
 - install [OpenFHEPy](https://anonymous.4open.science/r/OpenFHEPy-1234) into the virtual environment
